@@ -38,6 +38,26 @@ app.get("/api/produtos", async (req, res) => {
   }
 });
 
+// Definir modelo Usuário
+const UsuarioSchema = new mongoose.Schema({
+  full_name: String,
+  gender: String,
+});
+
+const Usuario = mongoose.model("Usuario", UsuarioSchema);
+
+// Criar rota para cadastrar usuário
+app.post("/register", async (req, res) => {
+  try {
+    const { full_name, gender } = req.body;
+    const novoUsuario = new Usuario({ full_name, gender });
+    await novoUsuario.save();
+    res.status(201).json({ message: "Usuário cadastrado com sucesso" });
+  } catch (err) {
+    res.status(500).json({ error: "Erro ao cadastrar usuário" });
+  }
+});
+
 // Iniciar servidor
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
